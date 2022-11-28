@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <!--
+        To get vertical Spread look, ConstraintLayout is used.
+        A LinearLayout with gravity set as center_vertical could have
+        been used as well, but I feel that the views get to close
+        together and does not give a good feeling to the onboarding screens.
+    -->
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center_vertical"
+        tools:context=".instructions.InstructionsFragment">
+
+        <TextView
+            android:id="@+id/instructions_title"
+            style="@style/titleStyle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:text="@string/instructions"
+            app:layout_constraintBottom_toTopOf="@id/instructions_message"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/instructions_message"
+            style="@style/labelStyle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/instructions_content"
+            app:layout_constraintBottom_toTopOf="@id/instructions_start_button"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/instructions_title" />
+
+        <Button
+            android:id="@+id/instructions_start_button"
+            style="@style/accentButtonStyle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/start"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/instructions_message" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

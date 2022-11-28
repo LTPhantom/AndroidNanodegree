@@ -1,0 +1,27 @@
+<resources>
+    <string name="app_name">ShoeStore</string>
+    <string name="welcome">"Welcome!"</string>
+    <string name="email">Email</string>
+    <string name="password">Password</string>
+    <string name="sign_up">Sign Up</string>
+    <string name="login">Login</string>
+    <string name="welcome_to_the_shoestore">Welcome to the ShoeStore!</string>
+    <string name="introductory_text">In this app you can visualize your list of shoes providing the basic information of them.</string>
+    <string name="next">Next</string>
+    <string name="instructions">Instructions</string>
+    <string name="instructions_content">To get started, tap on the \'+\' button to start adding shoes to your list.\n
+        In the new screen, input the Name of the shoes, the Company that makes them, Size and a general description.\n
+        After saving the shoe information, it can be visualized in the Shoe List.</string>
+    <string name="start">Start</string>
+    <string name="go_to_shoe_details">Go to Shoe Details</string>
+    <string name="name">Name</string>
+    <string name="company">Company</string>
+    <string name="shoe_size">Shoe Size</string>
+    <string name="description">Description</string>
+    <string name="cancel">Cancel</string>
+    <string name="save">Save</string>
+    <string name="logout">Logout</string>
+    <string name="shoe_list_format">\"%s\" by %s (Size: %.1f) \n %s</string>
+    <string name="shoe_list">Shoe List</string>
+    <string name="shoe_details">Shoe Details</string>
+</resources>
