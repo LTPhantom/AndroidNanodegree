@@ -6,14 +6,12 @@ import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.NavController
 import androidx.navigation.findNavController
+import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.NavigationUI
 import com.udacity.shoestore.databinding.ActivityMainBinding
 import com.udacity.shoestore.list.ShoeListViewModel
 import timber.log.Timber
-
-private const val KEY_SHOE_LIST = "shoe_list_key"
-private const val KEY_IS_LOGGED = "is_logged_key"
 
 class MainActivity : AppCompatActivity() {
 
@@ -21,9 +19,11 @@ class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
 
-        navController = findNavController(R.id.nav_host_fragment)
+        DataBindingUtil.setContentView<ActivityMainBinding>(this, R.layout.activity_main)
+
+        navController = (supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as
+                NavHostFragment).navController
         val appBarConfiguration = AppBarConfiguration(
             setOf(R.id.shoeListFragment, R.id.loginFragment, R.id.welcomeFragment)
         )

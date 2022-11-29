@@ -21,7 +21,7 @@ class ShoeListFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?,
     ): View {
-        binding = DataBindingUtil.inflate(inflater, R.layout.fragment_shoe_list, container, false)
+        binding = FragmentShoeListBinding.inflate(inflater, container, false)
         binding.lifecycleOwner = requireActivity()
         binding.shoeListFab.setOnClickListener{
             it.findNavController()

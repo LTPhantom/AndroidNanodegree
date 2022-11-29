@@ -18,26 +18,29 @@ import com.udacity.shoestore.models.Shoe
 class ShoeDetailFragment : Fragment() {
 
     private val shoeListViewModel: ShoeListViewModel by activityViewModels()
-    private lateinit var binding : FragmentShoeDetailBinding
+    private lateinit var binding: FragmentShoeDetailBinding
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?,
     ): View {
-        binding = DataBindingUtil.inflate(inflater, R.layout.fragment_shoe_detail, container, false)
-        binding.viewModel = shoeListViewModel
-        binding.currentShoe = Shoe("", 5.0, "", "")
-        binding.lifecycleOwner = this
-        shoeListViewModel.navigateUp.observe(viewLifecycleOwner) { navigateUp ->
-            if (navigateUp == true) {
-                navigateBack()
-                shoeListViewModel.onNavigateUpComplete()
+        binding =
+            FragmentShoeDetailBinding.inflate(inflater, container, false)
+        with(binding) {
+            viewModel = shoeListViewModel
+            currentShoe = Shoe("", 5.0, "", "")
+            lifecycleOwner = this@ShoeDetailFragment
+            shoeListViewModel.navigateUp.observe(viewLifecycleOwner) { navigateUp ->
+                if (navigateUp == true) {
+                    navigateBack()
+                    shoeListViewModel.onNavigateUpComplete()
+                }
             }
+            return root
         }
-        return binding.root
     }
 
-    private fun navigateBack(){
+    private fun navigateBack() {
         requireView().findNavController()
             .navigate(ShoeDetailFragmentDirections.actionShoeDetailFragmentToShoeListFragment())
     }
@@ -45,13 +48,15 @@ class ShoeDetailFragment : Fragment() {
 
 object Converter {
     @InverseMethod("stringToDouble")
-    @JvmStatic fun doubleToString(value: Double?): String? {
+    @JvmStatic
+    fun doubleToString(value: Double?): String? {
         if (value == null) return "0"
         return value.toString()
     }
 
     @SuppressLint("UseValueOf")
-    @JvmStatic fun stringToDouble(value: String?): java.lang.Double {
+    @JvmStatic
+    fun stringToDouble(value: String?): java.lang.Double {
         if (value == null) return java.lang.Double(0.0)
         return if (value.isEmpty()) java.lang.Double(0.0) else java.lang.Double(value)
     }
