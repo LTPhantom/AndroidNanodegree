@@ -23,8 +23,14 @@ class AsteroidsRepository(private val database: AsteroidDatabase) {
         it.asDomainObjects()
     }
 
-    suspend fun getImageOfTheDay(): ImageOfTheDay {
-        return Network.nasa.getImageOfTheDayMetadata(API_KEY)
+    suspend fun getImageOfTheDay(): ImageOfTheDay? {
+        return try {
+            Network.nasa.getImageOfTheDayMetadata(API_KEY)
+        } catch (e: Exception) {
+            // TODO: Change to proper Exception handling on Repository
+            Log.d("AsteroidsRepository", "Could not download Image Of The Day. ${e.message}")
+            null
+        }
     }
 
     suspend fun getAsteroids() {
@@ -42,6 +48,7 @@ class AsteroidsRepository(private val database: AsteroidDatabase) {
         }catch (e: Exception) {
             // TODO: Change to proper Exception handling on Repository
             Log.d("AsteroidsRepository", "Could not get asteroids. ${e.message}")
+            throw Exception(e)
         }
     }
 }

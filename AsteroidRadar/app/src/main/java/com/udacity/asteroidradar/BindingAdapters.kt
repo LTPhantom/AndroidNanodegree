@@ -1,9 +1,12 @@
 package com.udacity.asteroidradar
 
+import android.view.View
 import android.widget.ImageView
+import android.widget.ProgressBar
 import android.widget.TextView
 import androidx.databinding.BindingAdapter
 import com.squareup.picasso.Picasso
+import com.udacity.asteroidradar.main.NasaApiStatus
 import com.udacity.asteroidradar.network.ImageOfTheDay
 
 @BindingAdapter("statusIcon")
@@ -72,5 +75,20 @@ fun bindImageDescription(imgView: ImageView, description: String?) {
         imgView.contentDescription = context.getString(R.string.nasa_picture_of_day_content_description_format, description)
     } else {
         imgView.contentDescription = context.getString(R.string.this_is_nasa_s_picture_of_day_showing_nothing_yet)
+    }
+}
+
+@BindingAdapter("nasaApiStatus")
+fun bindNasaStatus(statusImageView: ProgressBar, status: NasaApiStatus) {
+    when(status) {
+        NasaApiStatus.LOADING -> {
+            statusImageView.visibility = View.VISIBLE
+        }
+        NasaApiStatus.ERROR -> {
+            statusImageView.visibility = View.GONE
+        }
+        NasaApiStatus.DONE -> {
+            statusImageView.visibility = View.GONE
+        }
     }
 }
