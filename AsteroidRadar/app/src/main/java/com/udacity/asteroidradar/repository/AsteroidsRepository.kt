@@ -4,12 +4,13 @@ import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.Transformations
 import com.udacity.asteroidradar.Constants
-import com.udacity.asteroidradar.Network
+import com.udacity.asteroidradar.network.Network
 import com.udacity.asteroidradar.api.parseAsteroidsJsonResult
 import com.udacity.asteroidradar.database.AsteroidDatabase
 import com.udacity.asteroidradar.database.asDomainObjects
 import com.udacity.asteroidradar.domain.Asteroid
 import com.udacity.asteroidradar.domain.asEntityObjects
+import com.udacity.asteroidradar.network.ImageOfTheDay
 import org.json.JSONObject
 import java.text.SimpleDateFormat
 import java.util.*
@@ -20,6 +21,10 @@ class AsteroidsRepository(private val database: AsteroidDatabase) {
 
     val asteroids: LiveData<List<Asteroid>> = Transformations.map(database.asteroidDao.getAsteroids()) {
         it.asDomainObjects()
+    }
+
+    suspend fun getImageOfTheDay(): ImageOfTheDay {
+        return Network.nasa.getImageOfTheDayMetadata(API_KEY)
     }
 
     suspend fun getAsteroids() {
