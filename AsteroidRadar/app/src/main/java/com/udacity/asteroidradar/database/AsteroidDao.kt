@@ -7,8 +7,8 @@ import com.udacity.asteroidradar.domain.Asteroid
 @Dao
 interface AsteroidDao {
     //TODO: Get asteroids from Today only
-    @Query("SELECT * FROM asteroidentity")
-    fun getTodaysAsteroids(): LiveData<List<AsteroidEntity>>
+    @Query("SELECT * FROM asteroidentity ORDER BY closeapproachdate ASC")
+    fun getAsteroids(): LiveData<List<AsteroidEntity>>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertAsteroids(vararg asteroids: AsteroidEntity)

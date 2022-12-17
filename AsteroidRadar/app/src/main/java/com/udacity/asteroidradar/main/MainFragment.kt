@@ -7,7 +7,6 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import com.udacity.asteroidradar.domain.Asteroid
 import com.udacity.asteroidradar.R
-import com.udacity.asteroidradar.database.asDomainObjects
 import com.udacity.asteroidradar.databinding.FragmentMainBinding
 
 class MainFragment : Fragment() {
@@ -28,9 +27,9 @@ class MainFragment : Fragment() {
                 findNavController().navigate(MainFragmentDirections.actionShowDetail(asteroid))
         })
         binding.asteroidRecycler.adapter = asteroidListAdapter
-        viewModel.todaysAsteroids.observe(viewLifecycleOwner) { asteroids ->
+        viewModel.asteroids.observe(viewLifecycleOwner) { asteroids ->
             asteroids?.let {
-                asteroidListAdapter.submitList(it.asDomainObjects())
+                asteroidListAdapter.submitList(it)
             }
         }
 
