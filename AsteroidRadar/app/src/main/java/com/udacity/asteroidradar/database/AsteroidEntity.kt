@@ -5,7 +5,7 @@ import androidx.room.PrimaryKey
 
 @Entity
 data class AsteroidEntity(
-    @PrimaryKey
+    @PrimaryKey(autoGenerate = true)
     val id: Long,
     val codename: String,
     val closeApproachDate: String,

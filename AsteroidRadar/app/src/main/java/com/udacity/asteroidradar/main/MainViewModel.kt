@@ -1,9 +1,11 @@
 package com.udacity.asteroidradar.main
 
 import android.app.Application
+import android.util.Log
 import androidx.lifecycle.*
 import com.udacity.asteroidradar.database.getDatabase
 import com.udacity.asteroidradar.network.ImageOfTheDay
+import com.udacity.asteroidradar.repository.AsteroidsFilter
 import com.udacity.asteroidradar.repository.AsteroidsRepository
 import kotlinx.coroutines.launch
 
@@ -23,19 +25,21 @@ class MainViewModel(application: Application) : ViewModel() {
 
     init {
         _nasaApiStatus.value = NasaApiStatus.LOADING
-        reloadAsteroids()
+        reloadAsteroids(AsteroidsFilter.SAVED)
         viewModelScope.launch {
             _imageOfTheDay.value = repository.getImageOfTheDay()
         }
     }
 
-    fun reloadAsteroids() {
+    fun reloadAsteroids(filter: AsteroidsFilter) {
         viewModelScope.launch {
             _nasaApiStatus.value = NasaApiStatus.LOADING
             try {
-                repository.getAsteroids()
+                repository.getAsteroids(filter)
                 _nasaApiStatus.value = NasaApiStatus.DONE
             } catch (e: Exception) {
+                // TODO: Delete DEBUG
+                Log.d("MainViewModel", "Exception: ${e.message}")
                 _nasaApiStatus.value = NasaApiStatus.ERROR
             }
         }
