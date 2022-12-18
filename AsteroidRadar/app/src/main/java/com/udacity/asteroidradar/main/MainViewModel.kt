@@ -38,8 +38,6 @@ class MainViewModel(application: Application) : ViewModel() {
                 repository.getAsteroids(filter)
                 _nasaApiStatus.value = NasaApiStatus.DONE
             } catch (e: Exception) {
-                // TODO: Delete DEBUG
-                Log.d("MainViewModel", "Exception: ${e.message}")
                 _nasaApiStatus.value = NasaApiStatus.ERROR
             }
         }

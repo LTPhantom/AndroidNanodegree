@@ -30,8 +30,6 @@ class AsteroidsRepository(private val database: AsteroidDatabase) {
         return try {
             Network.nasa.getImageOfTheDayMetadata(API_KEY)
         } catch (e: Exception) {
-            // TODO: Change to proper Exception handling on Repository
-            Log.d("AsteroidsRepository", "Could not download Image Of The Day. ${e.message}")
             null
         }
     }
@@ -59,5 +57,12 @@ class AsteroidsRepository(private val database: AsteroidDatabase) {
         } catch (e: Exception) {
             throw Exception(e)  // Error is handled on ViewModel
         }
+    }
+
+    suspend fun deleteAsteroidsBeforeToday() {
+        val calendar = Calendar.getInstance()
+        val dateFormat = SimpleDateFormat(Constants.API_QUERY_DATE_FORMAT, Locale.getDefault())
+        val today = dateFormat.format(calendar.time)
+        database.asteroidDao.deleteAsteroids(today)
     }
 }

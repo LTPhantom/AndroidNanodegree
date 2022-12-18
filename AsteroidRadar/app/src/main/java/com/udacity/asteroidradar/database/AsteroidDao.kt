@@ -15,9 +15,8 @@ interface AsteroidDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertAsteroids(vararg asteroids: AsteroidEntity)
 
-    // TODO: Add a proper Delete of old data and not everything
-    @Query("DELETE FROM asteroidentity")
-    suspend fun deleteAsteroids()
+    @Query("DELETE FROM asteroidentity WHERE date(closeapproachdate) < date(:beforeToday)")
+    suspend fun deleteAsteroids(beforeToday: String)
 }
 
 fun List<AsteroidEntity>.asDomainObjects(): List<Asteroid> {
