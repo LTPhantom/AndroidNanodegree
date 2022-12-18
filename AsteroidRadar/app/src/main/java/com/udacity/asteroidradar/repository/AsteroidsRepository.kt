@@ -14,7 +14,7 @@ import org.json.JSONObject
 import java.text.SimpleDateFormat
 import java.util.*
 
-private const val API_KEY = "bOtDblDYHuRS3ATgh2D7HRQ47egQ26nlXzrFJtEf"
+private const val API_KEY = "DEMO_KEY"
 
 enum class AsteroidsFilter { WEEK, TODAY, SAVED }
 class AsteroidsRepository(private val database: AsteroidDatabase) {
