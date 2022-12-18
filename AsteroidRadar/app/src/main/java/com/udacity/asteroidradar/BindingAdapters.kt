@@ -1,6 +1,7 @@
 package com.udacity.asteroidradar
 
 import android.view.View
+import android.widget.Button
 import android.widget.ImageView
 import android.widget.ProgressBar
 import android.widget.TextView
@@ -79,16 +80,24 @@ fun bindImageDescription(imgView: ImageView, description: String?) {
 }
 
 @BindingAdapter("nasaApiStatus")
-fun bindNasaStatus(statusImageView: ProgressBar, status: NasaApiStatus) {
+fun bindNasaStatus(progressBar: ProgressBar, status: NasaApiStatus) {
     when(status) {
         NasaApiStatus.LOADING -> {
-            statusImageView.visibility = View.VISIBLE
+            progressBar.visibility = View.VISIBLE
         }
+        else -> {
+            progressBar.visibility = View.GONE
+        }
+    }
+}
+
+@BindingAdapter("onErrorButton")
+fun bindOnErrorButton(button: Button, status: NasaApiStatus) {
+    when(status) {
         NasaApiStatus.ERROR -> {
-            statusImageView.visibility = View.GONE
-        }
-        NasaApiStatus.DONE -> {
-            statusImageView.visibility = View.GONE
+            button.visibility = View.VISIBLE
+        } else -> {
+            button.visibility = View.GONE
         }
     }
 }

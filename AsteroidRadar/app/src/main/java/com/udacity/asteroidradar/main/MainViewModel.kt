@@ -7,7 +7,7 @@ import com.udacity.asteroidradar.network.ImageOfTheDay
 import com.udacity.asteroidradar.repository.AsteroidsRepository
 import kotlinx.coroutines.launch
 
-enum class NasaApiStatus {LOADING, ERROR, DONE}
+enum class NasaApiStatus { LOADING, ERROR, DONE }
 class MainViewModel(application: Application) : ViewModel() {
     private val database = getDatabase(application)
     private val repository = AsteroidsRepository(database)
@@ -23,19 +23,21 @@ class MainViewModel(application: Application) : ViewModel() {
 
     init {
         _nasaApiStatus.value = NasaApiStatus.LOADING
+        reloadAsteroids()
         viewModelScope.launch {
             _imageOfTheDay.value = repository.getImageOfTheDay()
-            reloadAsteroids()
         }
     }
 
-    suspend fun reloadAsteroids() {
-        _nasaApiStatus.value = NasaApiStatus.LOADING
-        try {
-            repository.getAsteroids()
-            _nasaApiStatus.value = NasaApiStatus.DONE
-        } catch (e: Exception) {
-            _nasaApiStatus.value = NasaApiStatus.ERROR
+    fun reloadAsteroids() {
+        viewModelScope.launch {
+            _nasaApiStatus.value = NasaApiStatus.LOADING
+            try {
+                repository.getAsteroids()
+                _nasaApiStatus.value = NasaApiStatus.DONE
+            } catch (e: Exception) {
+                _nasaApiStatus.value = NasaApiStatus.ERROR
+            }
         }
     }
 
