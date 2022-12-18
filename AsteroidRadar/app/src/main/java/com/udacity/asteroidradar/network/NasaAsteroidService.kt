@@ -33,5 +33,5 @@ object Network {
         .addCallAdapterFactory(CoroutineCallAdapterFactory())
         .build()
 
-    val nasa = retrofit.create(NasaAsteroidService::class.java)
+    val nasa: NasaAsteroidService = retrofit.create(NasaAsteroidService::class.java)
 }

@@ -90,14 +90,3 @@ fun bindNasaStatus(progressBar: ProgressBar, status: NasaApiStatus) {
         }
     }
 }
-
-@BindingAdapter("onErrorButton")
-fun bindOnErrorButton(button: Button, status: NasaApiStatus) {
-    when(status) {
-        NasaApiStatus.ERROR -> {
-            button.visibility = View.VISIBLE
-        } else -> {
-            button.visibility = View.GONE
-        }
-    }
-}

@@ -1,6 +1,5 @@
 package com.udacity.asteroidradar.database
 
-import androidx.lifecycle.LiveData
 import androidx.room.*
 import com.udacity.asteroidradar.domain.Asteroid
 
