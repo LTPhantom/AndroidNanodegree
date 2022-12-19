@@ -24,7 +24,7 @@ class MainViewModel(application: Application) : ViewModel() {
 
     init {
         _nasaApiStatus.value = NasaApiStatus.LOADING
-        reloadAsteroids(AsteroidsFilter.SAVED)
+        reloadAsteroids(AsteroidsFilter.TODAY)
         viewModelScope.launch {
             _imageOfTheDay.value = repository.getImageOfTheDay()
         }
@@ -40,6 +40,10 @@ class MainViewModel(application: Application) : ViewModel() {
                 _nasaApiStatus.value = NasaApiStatus.ERROR
             }
         }
+    }
+
+    fun onErrorAcknowledged(){
+        _nasaApiStatus.value = NasaApiStatus.DONE
     }
 
     class Factory(private val application: Application) : ViewModelProvider.Factory {

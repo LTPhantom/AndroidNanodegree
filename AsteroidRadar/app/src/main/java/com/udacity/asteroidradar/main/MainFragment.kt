@@ -2,6 +2,7 @@ package com.udacity.asteroidradar.main
 
 import android.os.Bundle
 import android.view.*
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
@@ -33,6 +34,13 @@ class MainFragment : Fragment() {
                 asteroidListAdapter.submitList(it)
             }
         }
+        viewModel.nasaApiStatus.observe(viewLifecycleOwner) {
+            if (it == NasaApiStatus.ERROR) {
+                Toast.makeText(requireContext(), getString(R.string.fetch_error), Toast.LENGTH_LONG).show()
+                viewModel.onErrorAcknowledged()
+            }
+        }
+
 
         setHasOptionsMenu(true)
 
