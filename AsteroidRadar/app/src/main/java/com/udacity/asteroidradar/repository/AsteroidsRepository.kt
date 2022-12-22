@@ -32,15 +32,19 @@ class AsteroidsRepository(private val database: AsteroidDatabase) {
     }
 
     suspend fun getAsteroids(filter: AsteroidsFilter) {
-        if (filter == AsteroidsFilter.SAVED) {
-            _asteroids.value = database.asteroidDao.getSavedAsteroids().asDomainObjects()
-            return
-        }
 
         val calendar = Calendar.getInstance()
         val dateFormat = SimpleDateFormat(Constants.API_QUERY_DATE_FORMAT, Locale.getDefault())
-        val startDate = dateFormat.format(calendar.time)
+        var startDate = dateFormat.format(calendar.time)
+
+        if (filter == AsteroidsFilter.SAVED) {
+            _asteroids.value = database.asteroidDao.getSavedAsteroids(startDate).asDomainObjects()
+            return
+        }
+
         if (filter == AsteroidsFilter.WEEK) {
+            calendar.add(Calendar.DAY_OF_YEAR, 1)
+            startDate = dateFormat.format(calendar.time)
             calendar.add(Calendar.DAY_OF_YEAR, 7)
         }
 
@@ -49,11 +53,13 @@ class AsteroidsRepository(private val database: AsteroidDatabase) {
             val asteroidsJson = Network.nasa.getAsteroidList(startDate, endDate, API_KEY)
             val asteroids = parseAsteroidsJsonResult(JSONObject(asteroidsJson.string()))
             database.asteroidDao.insertAsteroids(*asteroids.asEntityObjects())
+        } catch (e: Exception) {
             _asteroids.value =
                 database.asteroidDao.getAsteroids(startDate, endDate).asDomainObjects()
-        } catch (e: Exception) {
             throw Exception(e)  // Error is handled on ViewModel
         }
+        _asteroids.value =
+            database.asteroidDao.getAsteroids(startDate, endDate).asDomainObjects()
     }
 
     suspend fun deleteAsteroidsBeforeToday() {

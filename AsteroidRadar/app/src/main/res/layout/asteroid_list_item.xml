@@ -43,6 +43,8 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:statusIcon="@{asteroid.potentiallyHazardous}"
-            tools:src="@drawable/ic_status_potentially_hazardous" />
+            app:asteroidStatusDescription="@{asteroid.potentiallyHazardous}"
+            tools:src="@drawable/ic_status_potentially_hazardous"
+            tools:ignore="ContentDescription" /> <!-- Content Description is set on Binding asteroidStatusDescription -->
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

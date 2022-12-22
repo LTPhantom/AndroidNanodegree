@@ -8,8 +8,8 @@ interface AsteroidDao {
     @Query("SELECT * FROM asteroidentity WHERE date(closeapproachdate) BETWEEN :startDate AND :endDate ORDER BY closeapproachdate ASC")
     suspend fun getAsteroids(startDate: String, endDate: String): List<AsteroidEntity>
 
-    @Query("SELECT * FROM asteroidentity ORDER BY closeapproachdate ASC")
-    suspend fun getSavedAsteroids(): List<AsteroidEntity>
+    @Query("SELECT * FROM asteroidentity WHERE date(closeapproachdate) >= date(:today) ORDER BY closeapproachdate ASC")
+    suspend fun getSavedAsteroids(today: String): List<AsteroidEntity>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertAsteroids(vararg asteroids: AsteroidEntity)
