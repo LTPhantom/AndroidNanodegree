@@ -29,6 +29,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var notificationManager: NotificationManager
     private lateinit var pendingIntent: PendingIntent
     private lateinit var action: NotificationCompat.Action
+    private lateinit var loadingButton: LoadingButton
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -42,6 +43,8 @@ class MainActivity : AppCompatActivity() {
         }
 
         createChannel()
+
+        loadingButton = findViewById(R.id.custom_button)
     }
 
     private fun createChannel() {
@@ -68,6 +71,7 @@ class MainActivity : AppCompatActivity() {
 
     private val receiver = object : BroadcastReceiver() {
         override fun onReceive(context: Context, intent: Intent?) {
+            loadingButton.stopAnimation()
             val id = intent?.getLongExtra(DownloadManager.EXTRA_DOWNLOAD_ID, -1)
             if (id != downloadID) {
                 return;

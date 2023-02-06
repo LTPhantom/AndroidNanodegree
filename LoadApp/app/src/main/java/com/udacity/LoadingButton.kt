@@ -31,7 +31,6 @@ class LoadingButton @JvmOverloads constructor(
             currentSweepAngle = valueAnimator.animatedValue as Float
             invalidate()
         }
-        doOnEnd { buttonState = ButtonState.Completed }
     }
 
     private var buttonState: ButtonState by Delegates.observable<ButtonState>(ButtonState.Completed) { p, old, new ->
@@ -54,6 +53,7 @@ class LoadingButton @JvmOverloads constructor(
             buttonColor = getColor(R.styleable.LoadingButton_buttonColor, 0)
             progressColor = getColor(R.styleable.LoadingButton_progressColor, 0)
         }
+        valueAnimator.repeatCount = ValueAnimator.INFINITE
     }
 
     override fun performClick(): Boolean {
@@ -99,6 +99,11 @@ class LoadingButton @JvmOverloads constructor(
             heightSize.toFloat() / 2 + TEXT_SIZE / 2f,
             paint
         )
+    }
+
+    fun stopAnimation() {
+        buttonState = ButtonState.Completed
+        valueAnimator.end()
     }
 
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
