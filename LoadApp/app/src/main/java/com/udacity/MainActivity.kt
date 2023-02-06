@@ -85,12 +85,11 @@ class MainActivity : AppCompatActivity() {
             val title = cursor.getString(cursor.getColumnIndex(DownloadManager.COLUMN_TITLE))
             detailIntent.putExtra("TITLE", title)
 
-            @SuppressLint("UnspecifiedImmutableFlag")
             pendingIntent = PendingIntent.getActivity(
                 applicationContext,
                 0,
                 detailIntent,
-                PendingIntent.FLAG_UPDATE_CURRENT
+                (PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE)
             )
 
             action =
