@@ -5,6 +5,7 @@ import android.content.Context
 import android.graphics.Canvas
 import android.graphics.Paint
 import android.util.AttributeSet
+import android.util.TypedValue
 import android.view.View
 import android.view.animation.LinearInterpolator
 import androidx.core.animation.doOnEnd
@@ -20,7 +21,6 @@ class LoadingButton @JvmOverloads constructor(
     private val paint: Paint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
         style = Paint.Style.FILL
         textAlign = Paint.Align.CENTER
-        textSize = TEXT_SIZE
     }
 
     private var currentSweepAngle = 0f;
@@ -112,9 +112,15 @@ class LoadingButton @JvmOverloads constructor(
         widthSize = w
         heightSize = h
         setMeasuredDimension(w, h)
+
+        val pixel = TypedValue.applyDimension(
+            TypedValue.COMPLEX_UNIT_SP,
+            TEXT_SIZE, resources.displayMetrics
+        )
+        paint.textSize = pixel
     }
 
     companion object {
-        private const val TEXT_SIZE = 64f;
+        private const val TEXT_SIZE = 24f;
     }
 }
