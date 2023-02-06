@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<MotionScene xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <Transition
+        app:autoTransition="animateToEnd"
+        app:constraintSetEnd="@id/end"
+        app:constraintSetStart="@id/start"
+        app:duration="5000" />
+
+    <ConstraintSet android:id="@+id/start">
+        <Constraint
+            android:id="@+id/download_icon"
+            android:layout_width="match_parent"
+            android:layout_height="200dp"
+            android:alpha="0"/>
+    </ConstraintSet>
+
+    <ConstraintSet android:id="@+id/end">
+        <Constraint
+            android:id="@+id/download_icon"
+            android:layout_width="match_parent"
+            android:layout_height="200dp"
+            android:alpha="1"/>
+    </ConstraintSet>
+</MotionScene>
