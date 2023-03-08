@@ -10,6 +10,7 @@ import com.udacity.project4.base.NavigationCommand
 import com.udacity.project4.locationreminders.data.ReminderDataSource
 import com.udacity.project4.locationreminders.data.dto.ReminderDTO
 import com.udacity.project4.locationreminders.reminderslist.ReminderDataItem
+import com.udacity.project4.wrapEspressoIdlingResource
 import kotlinx.coroutines.launch
 
 class SaveReminderViewModel(val app: Application, val dataSource: ReminderDataSource) :
@@ -31,6 +32,15 @@ class SaveReminderViewModel(val app: Application, val dataSource: ReminderDataSo
         selectedPOI.value = null
         latitude.value = null
         longitude.value = null
+    }
+
+    fun saveLocationInformation(locationName: String, lng: Double, lat: Double, poi: PointOfInterest?) {
+        wrapEspressoIdlingResource {
+            reminderSelectedLocationStr.value = locationName
+            longitude.value = lng
+            latitude.value = lat
+            selectedPOI.value = poi
+        }
     }
 
     /**
@@ -62,6 +72,7 @@ class SaveReminderViewModel(val app: Application, val dataSource: ReminderDataSo
             showToast.value = app.getString(R.string.reminder_saved)
             navigationCommand.value = NavigationCommand.Back
         }
+        onClear()
     }
 
     /**

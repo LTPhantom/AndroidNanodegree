@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "400132403496",
+    "project_id": "fir-nanodegree",
+    "storage_bucket": "fir-nanodegree.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:400132403496:android:5c85c9adc3a2062112e01d",
+        "android_client_info": {
+          "package_name": "com.udacity.project4"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "400132403496-c26f1a84hdrp5vp629a3ncuuua3onkil.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.udacity.project4",
+            "certificate_hash": "3a47ccaeb2d44dbba61955a371502774f8cac8ad"
+          }
+        },
+        {
+          "client_id": "400132403496-migt46eiaajskpnhecomvm7kihjf4g4s.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAJ0jbQj0Vy_S2VrvUc7LDOzviDY02FEKM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "400132403496-2b22u1ulv1q96i1h6del5r5lq8b24mdn.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
