@@ -13,3 +13,6 @@ The Asteroid Radar also creates a worker that will download Asteroid data each d
 
 ## ShoeStore
 First Android nanodegree Project
+
+## TODOListApp
+A Google API Key is needed to be added on the google_maps_api.xml (Debug)
