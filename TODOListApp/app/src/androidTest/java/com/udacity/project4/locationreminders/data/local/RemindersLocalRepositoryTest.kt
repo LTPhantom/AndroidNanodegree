@@ -12,7 +12,9 @@ import com.udacity.project4.locationreminders.reminderslist.ReminderDataItem
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.test.runTest
 import org.hamcrest.CoreMatchers.`is`
+import org.hamcrest.CoreMatchers.notNullValue
 import org.hamcrest.MatcherAssert.assertThat
 import org.junit.After
 import org.junit.Before
@@ -92,5 +94,14 @@ class RemindersLocalRepositoryTest {
 
         result as Success
         assertThat(result.data.size, `is`(0))
+    }
+
+    @Test
+    fun getReminder_returnsErrorWhenNoReminderIsFoundWithId() = runTest {
+        val result = localDataSource.getReminder("Non-existentId")
+
+        result as Result.Error
+        assertThat(result.message, notNullValue())
+
     }
 }

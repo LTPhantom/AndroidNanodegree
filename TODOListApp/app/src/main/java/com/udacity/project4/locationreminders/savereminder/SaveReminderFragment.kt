@@ -1,13 +1,19 @@
 package com.udacity.project4.locationreminders.savereminder
 
+import android.Manifest
 import android.annotation.SuppressLint
 import android.app.PendingIntent
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.os.Build
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.activity.result.contract.ActivityResultContracts
+import androidx.annotation.RequiresApi
+import androidx.core.content.ContextCompat
 import androidx.databinding.DataBindingUtil
 import com.google.android.gms.location.Geofence
 import com.google.android.gms.location.GeofencingClient
@@ -29,6 +35,16 @@ class SaveReminderFragment : BaseFragment() {
     override val _viewModel: SaveReminderViewModel by inject()
     private lateinit var binding: FragmentSaveReminderBinding
     private lateinit var geofencingClient: GeofencingClient
+    private val requestPermissionLauncher = registerForActivityResult(
+        ActivityResultContracts.RequestPermission()
+    ) { isGranted ->
+        if (isGranted) {
+            saveReminder()
+        } else {
+            _viewModel.showSnackBar.value =
+                "Notification permissions needed to receive reminders."
+        }
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -56,33 +72,51 @@ class SaveReminderFragment : BaseFragment() {
         }
 
         binding.saveReminder.setOnClickListener {
-            val title = _viewModel.reminderTitle.value
-            val description = _viewModel.reminderDescription.value
-            val location = _viewModel.reminderSelectedLocationStr.value
-            val latitude = _viewModel.latitude.value
-            val longitude = _viewModel.longitude.value
-
-            if(!binding.viewModel!!.validateEnteredData(ReminderDataItem(title,
-                    description,
-                    location,
-                    latitude,
-                    longitude
-                ))) {
-                return@setOnClickListener
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                if (!isPermissionGranted()) {
+                    requestPermissionLauncher.launch(Manifest.permission.POST_NOTIFICATIONS)
+                }
+            } else {
+                saveReminder()
             }
+        }
+    }
 
-            val dataItem = ReminderDataItem(title,
+    @RequiresApi(Build.VERSION_CODES.TIRAMISU)
+    private fun isPermissionGranted(): Boolean {
+        return ContextCompat.checkSelfPermission(
+            requireContext(),
+            Manifest.permission.POST_NOTIFICATIONS) == PackageManager.PERMISSION_GRANTED
+    }
+
+    private fun saveReminder() {
+        val title = _viewModel.reminderTitle.value
+        val description = _viewModel.reminderDescription.value
+        val location = _viewModel.reminderSelectedLocationStr.value
+        val latitude = _viewModel.latitude.value
+        val longitude = _viewModel.longitude.value
+
+        if (!binding.viewModel!!.validateEnteredData(ReminderDataItem(title,
                 description,
                 location,
                 latitude,
-                longitude,
-                location!!
-            )
-
-            val position = LatLng(latitude!!, longitude!!)
-            addGeofence(position, location)
-            binding.viewModel!!.validateAndSaveReminder(dataItem)
+                longitude
+            ))
+        ) {
+            return
         }
+
+        val dataItem = ReminderDataItem(title,
+            description,
+            location,
+            latitude,
+            longitude,
+            location!!
+        )
+
+        val position = LatLng(latitude!!, longitude!!)
+        addGeofence(position, location)
+        binding.viewModel!!.validateAndSaveReminder(dataItem)
     }
 
     @SuppressLint("MissingPermission")
