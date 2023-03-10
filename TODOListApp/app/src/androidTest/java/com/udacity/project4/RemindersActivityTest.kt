@@ -2,22 +2,19 @@ package com.udacity.project4
 
 import android.app.Application
 import android.view.View
+import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.test.core.app.ActivityScenario
 import androidx.test.core.app.ApplicationProvider.getApplicationContext
 import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.IdlingRegistry
 import androidx.test.espresso.action.ViewActions.*
-import androidx.test.espresso.assertion.ViewAssertions
 import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.matcher.RootMatchers.withDecorView
-import androidx.test.espresso.matcher.ViewMatchers
 import androidx.test.espresso.matcher.ViewMatchers.*
-import androidx.test.ext.junit.rules.activityScenarioRule
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.filters.LargeTest
 import com.udacity.project4.locationreminders.RemindersActivity
 import com.udacity.project4.locationreminders.data.ReminderDataSource
-import com.udacity.project4.locationreminders.data.dto.ReminderDTO
 import com.udacity.project4.locationreminders.data.local.LocalDB
 import com.udacity.project4.locationreminders.data.local.RemindersLocalRepository
 import com.udacity.project4.locationreminders.reminderslist.RemindersListViewModel
@@ -27,10 +24,10 @@ import com.udacity.project4.util.monitorActivity
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.test.runTest
-import org.hamcrest.Matchers
 import org.hamcrest.core.IsNot.not
 import org.junit.After
 import org.junit.Before
+import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.koin.androidx.viewmodel.dsl.viewModel
@@ -38,14 +35,17 @@ import org.koin.core.context.startKoin
 import org.koin.core.context.stopKoin
 import org.koin.dsl.module
 import org.koin.java.KoinJavaComponent.get
-import org.koin.test.get
 import org.koin.test.*
+
 
 @OptIn(ExperimentalCoroutinesApi::class)
 @RunWith(AndroidJUnit4::class)
 @LargeTest
 //END TO END test to black box test the app
 class RemindersActivityTest {// Extended Koin Test - embed autoclose @after method to close Koin after every test
+
+    @get:Rule
+    var instantExecutorRule = InstantTaskExecutorRule()
 
     private lateinit var repository: ReminderDataSource
     private lateinit var appContext: Application
@@ -117,6 +117,12 @@ class RemindersActivityTest {// Extended Koin Test - embed autoclose @after meth
         onView(withId(R.id.saveReminder)).perform(click())
 
         onView(withText("title")).check(matches(isDisplayed()))
+
+        var decorView: View? = null
+        activityScenario.onActivity { activity ->
+            decorView = activity.window.decorView
+        }
+        onView(withText("Reminder Saved !")).inRoot(withDecorView(not(decorView!!))).check(matches(isDisplayed()))
 
         activityScenario.close()
     }

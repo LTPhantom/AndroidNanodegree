@@ -3,11 +3,11 @@ package com.udacity.project4.locationreminders.savereminder.selectreminderlocati
 
 import android.Manifest
 import android.annotation.SuppressLint
-import android.content.Context
 import android.content.pm.PackageManager
 import android.content.res.Resources
 import android.location.Criteria
 import android.location.LocationManager
+import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import android.view.*
@@ -186,7 +186,8 @@ class SelectLocationFragment : BaseFragment(), OnMapReadyCallback {
     private fun initMyLocation() {
         map.isMyLocationEnabled = true
 
-        val locationManager = getSystemService(requireContext(), LocationManager::class.java) ?: return
+        val locationManager =
+            getSystemService(requireContext(), LocationManager::class.java) ?: return
         val zoomLevel = 18f
         val criteria = Criteria()
         val location = locationManager.getLastKnownLocation(locationManager
@@ -198,9 +199,18 @@ class SelectLocationFragment : BaseFragment(), OnMapReadyCallback {
     }
 
     private fun isPermissionGranted(): Boolean {
-        return ContextCompat.checkSelfPermission(
-            requireContext(),
-            Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED
+        return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+            ContextCompat.checkSelfPermission(
+                requireContext(),
+                Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED &&
+                    ContextCompat.checkSelfPermission(
+                        requireContext(),
+                        Manifest.permission.ACCESS_BACKGROUND_LOCATION) == PackageManager.PERMISSION_GRANTED
+        } else {
+            ContextCompat.checkSelfPermission(
+                requireContext(),
+                Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED
+        }
     }
 
     private fun enableMyLocation() {

@@ -2,6 +2,7 @@ package com.udacity.project4.locationreminders.savereminder
 
 import android.Manifest
 import android.annotation.SuppressLint
+import android.app.Activity
 import android.app.PendingIntent
 import android.content.Intent
 import android.content.pm.PackageManager
@@ -15,11 +16,11 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.RequiresApi
 import androidx.core.content.ContextCompat
 import androidx.databinding.DataBindingUtil
-import com.google.android.gms.location.Geofence
-import com.google.android.gms.location.GeofencingClient
-import com.google.android.gms.location.GeofencingRequest
-import com.google.android.gms.location.LocationServices
+import com.google.android.gms.common.api.ApiException
+import com.google.android.gms.common.api.ResolvableApiException
+import com.google.android.gms.location.*
 import com.google.android.gms.maps.model.LatLng
+import com.google.android.gms.tasks.Task
 import com.udacity.project4.R
 import com.udacity.project4.base.BaseFragment
 import com.udacity.project4.base.NavigationCommand
@@ -39,7 +40,7 @@ class SaveReminderFragment : BaseFragment() {
         ActivityResultContracts.RequestPermission()
     ) { isGranted ->
         if (isGranted) {
-            saveReminder()
+            completePermissions()
         } else {
             _viewModel.showSnackBar.value =
                 "Notification permissions needed to receive reminders."
@@ -73,23 +74,50 @@ class SaveReminderFragment : BaseFragment() {
 
         binding.saveReminder.setOnClickListener {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-                if (!isPermissionGranted()) {
+                if (!isNotificationsPermissionGranted()) {
                     requestPermissionLauncher.launch(Manifest.permission.POST_NOTIFICATIONS)
                 }
             } else {
-                saveReminder()
+                completePermissions()
             }
         }
     }
 
     @RequiresApi(Build.VERSION_CODES.TIRAMISU)
-    private fun isPermissionGranted(): Boolean {
+    private fun isNotificationsPermissionGranted(): Boolean {
         return ContextCompat.checkSelfPermission(
             requireContext(),
             Manifest.permission.POST_NOTIFICATIONS) == PackageManager.PERMISSION_GRANTED
     }
 
+    private fun isLocationPermissionGranted(): Boolean {
+        return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+            ContextCompat.checkSelfPermission(
+                requireContext(),
+                Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED &&
+                    ContextCompat.checkSelfPermission(
+                        requireContext(),
+                        Manifest.permission.ACCESS_BACKGROUND_LOCATION) == PackageManager.PERMISSION_GRANTED
+        } else {
+            ContextCompat.checkSelfPermission(
+                requireContext(),
+                Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED
+        }
+    }
+
+    private fun completePermissions() {
+        if (!isLocationPermissionGranted()) {
+            requestPermissionLauncher.launch(Manifest.permission.ACCESS_FINE_LOCATION)
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+                requestPermissionLauncher.launch(Manifest.permission.ACCESS_BACKGROUND_LOCATION)
+            }
+            return
+        }
+        startGPSEnablingPrompt()
+    }
+
     private fun saveReminder() {
+
         val title = _viewModel.reminderTitle.value
         val description = _viewModel.reminderDescription.value
         val location = _viewModel.reminderSelectedLocationStr.value
@@ -156,6 +184,52 @@ class SaveReminderFragment : BaseFragment() {
         super.onDestroy()
         //make sure to clear the view model after destroy, as it's a single view model.
         _viewModel.onClear()
+    }
+
+    private fun startGPSEnablingPrompt() {
+        val locationRequest = LocationRequest.create()
+        locationRequest.priority = LocationRequest.PRIORITY_HIGH_ACCURACY
+        val builder = LocationSettingsRequest.Builder().addLocationRequest(locationRequest)
+
+        val result: Task<LocationSettingsResponse> =
+            LocationServices.getSettingsClient(requireActivity())
+                .checkLocationSettings(builder.build())
+
+        result.addOnCompleteListener { task ->
+            try {
+                task.getResult(ApiException::class.java)
+                saveReminder()
+            } catch (exception: ApiException) {
+                when (exception.statusCode) {
+                    LocationSettingsStatusCodes.RESOLUTION_REQUIRED -> {
+                        try {
+                            val resolvable: ResolvableApiException =
+                                exception as ResolvableApiException
+                            resolvable.startResolutionForResult(
+                                requireActivity(), LocationRequest.PRIORITY_HIGH_ACCURACY
+                            )
+                        } catch (error: Exception) {
+                            _viewModel.showToast.value = "There was an error starting GPS"
+                        }
+                    }
+                    LocationSettingsStatusCodes.SETTINGS_CHANGE_UNAVAILABLE -> {
+                    }
+                }
+            }
+        }
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        when (requestCode) {
+            LocationRequest.PRIORITY_HIGH_ACCURACY -> {
+                if (resultCode == Activity.RESULT_OK) {
+                    saveReminder()
+                } else {
+                    _viewModel.showToast.value = "Location is needed to save reminder"
+                }
+            }
+        }
     }
 
     companion object {

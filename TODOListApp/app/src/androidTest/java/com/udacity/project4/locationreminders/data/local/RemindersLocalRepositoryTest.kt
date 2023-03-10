@@ -101,7 +101,7 @@ class RemindersLocalRepositoryTest {
         val result = localDataSource.getReminder("Non-existentId")
 
         result as Result.Error
-        assertThat(result.message, notNullValue())
+        assertThat(result.message, `is`("Reminder not found!"))
 
     }
 }
