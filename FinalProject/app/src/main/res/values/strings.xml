@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Political Preparedness</string>
+    <string name="app_logo_description">App Logo showing a hand inserting a vote to a ballot</string>
+    <string name="upcoming_elections">Upcoming Elections</string>
+    <string name="representatives">Representatives</string>
+    <string name="saved_elections">Saved Elections</string>
+
+
+</resources>
