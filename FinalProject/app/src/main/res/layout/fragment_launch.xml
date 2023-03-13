@@ -14,7 +14,7 @@
             android:layout_height="wrap_content"
             android:contentDescription="@string/app_logo_description"
             android:src="@drawable/ballot_logo"
-            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintBottom_toTopOf="@id/upcoming_button"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
