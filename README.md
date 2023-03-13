@@ -17,3 +17,7 @@ First Android nanodegree Project
 ## TODOListApp
 * A Google API Key is needed to be added on the google_maps_api.xml (Debug)
 * An app apk is added on the root of the TODOListApp folder to try it out.
+
+## Capstone Project - Political Preparedness
+* A Google API Key is needed to be added on CivicsHttpClient.kt.
+* A SHA1 is needed to be added on the CivicsHttpClient.kt.
